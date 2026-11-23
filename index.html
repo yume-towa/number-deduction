@@ -346,8 +346,15 @@ function NumberVault({ initial } = {}) {
   };
 
   // ---- キーボード操作(全角数字もOK、Enterで推理) ----
+  // マウスやタッチで押したボタンにもフォーカスが残るため、
+  // Tab キーでボタンに移動した時だけ、Enter をそのボタンに渡す
+  const tabFocusRef = useRef(false);
   useEffect(() => {
+    const onPointer = () => {
+      tabFocusRef.current = false;
+    };
     const onKey = (e) => {
+      if (e.key === "Tab") tabFocusRef.current = true;
       if (e.isComposing || e.key === "Process" || e.ctrlKey || e.metaKey || e.altKey) return;
       const el = e.target;
       const tag = (el && el.tagName) || "";
@@ -363,14 +370,18 @@ function NumberVault({ initial } = {}) {
       } else if (k === "Escape") {
         clearInput();
       } else if (k === "Enter") {
-        // 道具やモードのボタンにフォーカスがある時は、そのボタンを押す
-        if (tag === "BUTTON" && !(el.dataset && el.dataset.key)) return;
+        // Tab で道具やモードのボタンに移動している時は、そのボタンを押す
+        if (tag === "BUTTON" && !(el.dataset && el.dataset.key) && tabFocusRef.current && !el.disabled) return;
         e.preventDefault();
         submit();
       }
     };
     window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
+    window.addEventListener("pointerdown", onPointer, true);
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      window.removeEventListener("pointerdown", onPointer, true);
+    };
   }, [pressDigit, backspace, clearInput, submit]);
 
   const drumChars = playing ? input.padEnd(digits, " ").split("") : target.split("");
