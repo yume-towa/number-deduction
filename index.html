@@ -391,6 +391,11 @@ function NumberVault({ initial } = {}) {
     <div className="ngg">
       <style>{CSS}</style>
       <div className="wrap">
+        {/* ---------- 作品一覧に戻る ---------- */}
+        <nav className="back-nav">
+          <a className="back-to-list" href="https://yume-towa.github.io/">一覧に戻る</a>
+        </nav>
+
         {/* ---------- ヘッダー ---------- */}
         <header className="head">
           <div className="eyebrow">Case file · {digits} digits</div>
@@ -785,6 +790,12 @@ body { background: var(--bg); color: var(--fg); margin: 0; }
 .ngg button { font-family: inherit; touch-action: manipulation; }
 .ngg :focus-visible { outline: 2px solid var(--brass-hi); outline-offset: 2px; }
 .wrap { max-width: 980px; margin: 0 auto; display: grid; gap: 22px; }
+
+/* 作品一覧(TOPページ)に戻るボタン */
+.back-nav { justify-self: start; margin-bottom: -10px; }
+.back-to-list { display: inline-flex; align-items: center; padding: 4px 12px; border: 1px solid var(--rule); border-radius: 999px;
+  font-size: 12.5px; line-height: 1.5; color: var(--mute); text-decoration: none; transition: color .15s, border-color .15s; }
+.back-to-list:hover { color: var(--fg); border-color: var(--mute); }
 
 /* ヘッダー */
 .head { display: grid; gap: 12px; justify-items: center; text-align: center; }
